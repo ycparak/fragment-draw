@@ -1,0 +1,11 @@
+---
+import { links } from "../data/page";
+---
+<!-- The same links in one strip under the bar, below 1100px; the styles are in styles/rail.css. -->
+<nav class="strip" aria-label="On this page">
+  <div class="strip-scroll">
+    <ul>
+      {links.map((l) => <li><a href={`#${l.id}`}><span>{l.label}</span></a></li>)}
+    </ul>
+  </div>
+</nav>

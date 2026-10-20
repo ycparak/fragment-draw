@@ -1,0 +1,23 @@
+---
+import Wm from "./Wm.astro";
+import { skill, withBase } from "../lib/url";
+
+const navLink = "text-main-500 transition-colors duration-150 hover:text-main";
+---
+<!-- The bar on the page: the name home, the version beside it, then the links. A button is text on main-200, as the site's are. -->
+<header class="sticky top-0 z-10 flex h-(--topbar) items-center justify-between gap-[1ch] bg-canvas px-(--edge)">
+  <a class="flex items-baseline gap-[1ch] whitespace-nowrap" href={withBase("")}>
+    <Wm /><span>Draw</span><span class="text-main-500">v0.1</span>
+  </a>
+  <div class="flex items-center gap-[2ch] whitespace-nowrap">
+    <a class:list={[navLink, "max-[520px]:hidden"]} href="#kinds">Kinds</a>
+    <a class:list={[navLink, "max-[520px]:hidden"]} href="#rules">Rules</a>
+    <a class={navLink} href={skill("SKILL.md")}>SKILL.md</a>
+    <button
+      type="button"
+      id="theme"
+      aria-label="Switch theme"
+      class="bg-main-200 px-[1ch] py-0.5 transition-colors duration-150 hover:bg-main-300"
+    >Dark</button>
+  </div>
+</header>

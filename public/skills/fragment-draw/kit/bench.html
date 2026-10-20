@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>fragment-draw</title>
+<script>
+  // the theme before first paint: ?theme= wins, then the system
+  (function () {
+    var q = new URLSearchParams(location.search).get("theme");
+    var dark = q ? q === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+    if (dark) document.documentElement.classList.add("dark");
+  })();
+</script>
+<style>
+/*CSS*/
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: rgb(var(--colour-canvas)); }
+body { font: 14px/18px FragmentMono, ui-monospace, monospace; font-feature-settings: "ss01" on; color: rgb(var(--colour-main)); background: rgb(var(--colour-canvas)); -webkit-font-smoothing: antialiased; }
+main { max-width: 760px; margin: 0 auto; padding: 24px 16px; }
+.top { display: flex; justify-content: space-between; color: rgb(var(--colour-main-500)); padding-bottom: 9px; }
+.wordmark { color: rgb(var(--colour-main)); font-size: 11.5px; letter-spacing: .02em; }
+#plate { background: rgb(var(--colour-negative)); }
+#plate[data-kind="diagram"] { padding: 36px 0; }
+#plate[data-kind="field"] { padding: 0; }
+#stage { width: 100%; }
+.cap { display: grid; gap: 2px; padding-top: 9px; }
+#means { color: rgb(var(--colour-main-500)); text-wrap: pretty; }
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 9px 1ch; padding-top: 18px; }
+button { font: inherit; color: rgb(var(--colour-main)); background: rgb(var(--colour-main-200)); border: 0; padding: 4px 1ch; cursor: pointer; }
+button:hover { background: rgb(var(--colour-main-300)); }
+button:focus-visible, input:focus-visible { outline: 1px solid rgb(var(--colour-main)); outline-offset: 2px; }
+#scrub { flex: 1 1 160px; min-width: 120px; accent-color: rgb(var(--colour-main)); }
+#read { margin-left: auto; color: rgb(var(--colour-main-500)); font-variant-numeric: tabular-nums; }
+#error { display: none; margin-top: 18px; padding: 9px 1ch; background: rgb(var(--colour-main)); color: rgb(var(--colour-negative)); white-space: pre-wrap; }
+#error[data-on] { display: block; }
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><span class="wordmark">FRAGMENT</span><span id="kind"></span></div>
+  <div id="plate"><div id="stage"></div></div>
+  <div class="cap"><span id="name"></span><span id="means"></span></div>
+  <div class="bar">
+    <button type="button" id="play">Pause</button>
+    <button type="button" id="next" hidden>Next</button>
+    <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Scrub">
+    <button type="button" id="theme">Dark</button>
+    <span id="read" aria-live="off"></span>
+  </div>
+  <p id="error" role="alert"></p>
+</main>
+<script>
+/*KERNEL*/
+</script>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var $ = function (id) { return document.getElementById(id); };
+  var fail = function (m) { $("error").textContent = String(m); $("error").setAttribute("data-on", ""); };
+  window.addEventListener("error", function (e) { fail(e.message); });
+  if (q.get("w")) document.querySelector("main").style.maxWidth = (+q.get("w") + 32) + "px";
+
+  window.__mount = function (piece) {
+    var engine = FD.engines[piece.kind]($("stage"), piece);
+    window.__engine = engine;
+    document.title = piece.name + " · fragment-draw";
+    $("plate").dataset.kind = piece.kind;
+    $("kind").textContent = piece.kind;
+    $("name").textContent = piece.name;
+    $("means").textContent = piece.means;
+    var frames = engine.frames, scrub = $("scrub");
+    if (frames) { scrub.max = String(frames - 1); $("next").hidden = false; }
+    if (frames === 1) { $("play").hidden = true; $("next").hidden = true; scrub.hidden = true; }
+    var label = function () { $("play").textContent = engine.playing() ? "Pause" : "Play"; };
+    var read = function () {
+      $("read").textContent = engine.readout();
+      if (!scrub.matches(":active")) scrub.value = String(frames ? engine.at() : Math.round(engine.at() * 1000));
+    };
+    $("play").onclick = function () { engine.playing() ? engine.pause() : engine.play(); label(); };
+    $("next").onclick = function () { engine.pause(); engine.seek((engine.at() + 1) % frames); label(); read(); };
+    scrub.oninput = function () { engine.pause(); engine.seek(frames ? +scrub.value : +scrub.value / 1000); label(); read(); };
+    $("theme").onclick = function () {
+      var dark = document.documentElement.classList.toggle("dark");
+      $("theme").textContent = dark ? "Light" : "Dark";
+    };
+    $("theme").textContent = document.documentElement.classList.contains("dark") ? "Light" : "Dark";
+    if (q.get("play") === "0" || q.has("at")) engine.pause();
+    if (q.has("at")) engine.seek(+q.get("at"));
+    label();
+    setInterval(read, 120);
+    read();
+    return engine;
+  };
+})();
+</script>
+<script>
+try {
+/*FIGURE*/
+} catch (e) { document.getElementById("error").textContent = e.message; document.getElementById("error").setAttribute("data-on", ""); }
+</script>
+</body>
+</html>

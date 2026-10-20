@@ -1,0 +1,24 @@
+{
+  "name": "fragment-draw",
+  "type": "module",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "made": "bun run scripts/made.ts",
+    "sync": "bun run scripts/sync.ts"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.4.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/bun": "^1.4.3",
+    "typescript": "6"
+  }
+}

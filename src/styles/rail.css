@@ -1,0 +1,56 @@
+/* The rail, from 1100px: numbered groups, lettered links, each group's links hung off its mark on a hairline. The line
+   to the section in view is drawn in the group's colour and a dot lands at its end; below 1100px the same links run in
+   one strip under the bar, and a dot flies to the one in view. These lean on :has() and pseudo-elements, so they stay
+   as CSS rather than utilities. */
+@layer components {
+  .rail { display: none; }
+  .rail-group { display: grid; gap: 6px; }
+  .rail-title { display: flex; align-items: center; gap: 1ch; transition: color 240ms ease; }
+  .rail-title .num { color: rgb(var(--colour-main-500)); }
+  .rail-title svg { flex: none; transition: filter 240ms ease, opacity 240ms ease; }
+  .rail nav:has([aria-current]) .rail-group:not(:has([aria-current])) .rail-title { color: rgb(var(--colour-main-500)); }
+  .rail nav:has([aria-current]) .rail-group:not(:has([aria-current])) .rail-title svg { filter: grayscale(1); opacity: 0.45; }
+  .rail ul { position: relative; padding-left: 24px; }
+  .rail li { position: relative; }
+  .rail li::before, .rail li::after { content: ""; position: absolute; left: -17px; width: 11px; border: 0 solid rgb(var(--colour-main-300)); border-width: 0 0 1px 1px; pointer-events: none; }
+  .rail li::before { top: calc(-50% - 6px); bottom: 50%; }
+  .rail li:first-child::before { top: -2px; }
+  .rail li::after { top: calc(50% - 6px); height: 6px; z-index: 1; border-color: var(--gc); clip-path: inset(0 100% 0 0); }
+  .rail li:has(> [aria-current])::after { clip-path: inset(0); }
+  .rail ul::after { content: ""; position: absolute; top: -2px; bottom: 0; left: 7px; width: 11px; border-left: 1px solid var(--gc); clip-path: inset(0 0 calc((1 - var(--reach, 0)) * 100%) 0); pointer-events: none; }
+  .rail-link { position: relative; display: flex; gap: 1ch; padding: 2px 0; color: rgb(var(--colour-main-500)); white-space: nowrap; transition: color 200ms ease; }
+  .rail-link .k { color: rgb(var(--colour-main-300)); transition: color 200ms ease; }
+  .rail-link[aria-current], .rail-link[aria-current] .k { color: rgb(var(--colour-main)); }
+  @media (hover: hover) { .rail-link:hover { color: rgb(var(--colour-main)); } }
+  .rail-link::before { content: ""; position: absolute; top: calc(50% - 2.5px); left: -6.5px; width: 4px; height: 4px; background: var(--gc); transform: scale(0); }
+  .rail-link[aria-current]::before { transform: none; }
+  .rail [data-live] ul::after { transition: clip-path 300ms var(--ease-out); }
+  .rail [data-live] li::after { transition: clip-path 140ms ease-out; }
+  .rail [data-live] li:has(> [aria-current])::after { transition: clip-path 220ms var(--ease-out) 160ms; }
+  .rail [data-live] .rail-link::before { transition: transform 120ms ease-out; }
+  .rail [data-live] .rail-link[aria-current]::before { transition: transform 260ms cubic-bezier(0.34, 1.56, 0.64, 1) 320ms; }
+
+  .strip { position: sticky; top: var(--topbar); z-index: 9; background: rgb(var(--colour-canvas)); }
+  .strip-scroll { position: relative; overflow-x: auto; padding: 4px max(calc(var(--gutter) - 1ch), calc((100% - var(--col)) / 2 - 1ch)); scrollbar-width: none; }
+  .strip-scroll::-webkit-scrollbar { display: none; }
+  .strip ul { display: flex; gap: 0; width: max-content; }
+  .strip a { display: block; padding: 6px 1ch; color: rgb(var(--colour-main-500)); white-space: nowrap; transition: color 200ms ease; }
+  .strip a > span { display: inline-block; }
+  .strip a[aria-current] { color: rgb(var(--colour-main)); }
+  .strip a[aria-current] > span { transform: translateX(10px); }
+  .strip [data-live] a > span { transition: transform 250ms var(--ease-out); }
+  .strip [data-live] a[aria-current] > span { transition-duration: 300ms; transition-delay: 160ms; }
+  .strip .dot { position: absolute; top: 0; left: 0; width: 5px; height: 5px; background: rgb(var(--colour-main)); pointer-events: none; }
+  .strip [data-live] > .dot { transition: translate 350ms var(--ease-out); }
+
+  @media (min-width: 1100px) {
+    .strip { display: none; }
+    .rail { position: fixed; top: var(--topbar); bottom: 0; left: var(--edge); z-index: 5; display: flex; flex-direction: column; justify-content: center; width: 240px; padding: 3rem 0; }
+    .rail nav { display: grid; gap: 28px; min-height: 0; overflow-y: auto; scrollbar-width: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .strip [data-live] > .dot, .strip [data-live] a > span, .strip [data-live] a[aria-current] > span,
+    .rail [data-live] ul::after, .rail [data-live] li::after, .rail [data-live] li:has(> [aria-current])::after,
+    .rail [data-live] .rail-link::before, .rail [data-live] .rail-link[aria-current]::before { transition: none; }
+  }
+}

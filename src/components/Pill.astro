@@ -1,0 +1,22 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"div"> {
+  command: string;
+  /** a shell line: a `$` before it, kept to one line and scrolled */
+  shell?: boolean;
+}
+const { command, shell = false, class: cls, ...rest } = Astro.props;
+---
+<!-- A line to type: a white block, the line, and a Copy button. A shell line keeps to one line and scrolls; a prompt wraps. -->
+<div class:list={["flex items-start gap-[1ch] bg-negative py-2.5 pr-2.5 pl-[1.5ch]", cls]} {...rest}>
+  {shell && <span class="text-main-500 select-none" aria-hidden="true">$</span>}
+  <code
+    class:list={["min-w-0 flex-1 text-pretty", shell && "overflow-x-auto whitespace-nowrap [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"]}
+    data-copy-source>{command}</code>
+  <button
+    type="button"
+    data-copy
+    class="-my-0.5 flex-none bg-main-200 px-[1ch] py-0.5 transition-colors duration-150 hover:bg-main-300 data-copied:bg-main data-copied:text-negative"
+  >Copy</button>
+</div>

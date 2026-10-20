@@ -1,0 +1,33 @@
+---
+import "../styles/global.css";
+import regular from "../assets/fonts/FragmentMono-Regular.woff2?url";
+
+interface Props { title: string; description: string }
+const { title, description } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <link rel="preload" href={regular} as="font" type="font/woff2" crossorigin>
+  <script is:inline>
+    // the theme before first paint: ?theme= wins, then what was picked here, then the system
+    (function () {
+      var q = new URLSearchParams(location.search).get("theme"), saved = null;
+      try { saved = localStorage.getItem("fd-theme"); } catch (e) {}
+      var pick = q || saved;
+      var dark = pick ? pick === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+      if (dark) document.documentElement.classList.add("dark");
+    })();
+  </script>
+</head>
+<body class="min-h-screen bg-canvas font-mono text-[14px]/5 text-main">
+  <slot />
+  <script>
+    import "../scripts/main";
+  </script>
+</body>
+</html>

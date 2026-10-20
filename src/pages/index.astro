@@ -1,0 +1,162 @@
+---
+import Base from "../layouts/Base.astro";
+import Topbar from "../components/Topbar.astro";
+import Rail from "../components/Rail.astro";
+import Strip from "../components/Strip.astro";
+import Section from "../components/Section.astro";
+import Prose from "../components/Prose.astro";
+import Pill from "../components/Pill.astro";
+import Rows from "../components/Rows.astro";
+import Example from "../components/Example.astro";
+import Link from "../components/Link.astro";
+import Wm from "../components/Wm.astro";
+import { files, how, rules } from "../data/page";
+import { skill } from "../lib/url";
+
+const heading = "Draw like Fragment.";
+---
+<Base
+  title="Draw like Fragment"
+  description="fragment-draw: a skill for coding agents that draws diagrams, illustrations and number-field shaders in the style of fragment.dev, as one HTML file."
+>
+  <Topbar />
+  <Rail />
+  <Strip />
+
+  <!-- One column of 640px; from 1100px the rail of the page's sections sits by its left edge, as the docs' sidebar does. -->
+  <main class="mx-auto max-w-[calc(var(--col)+2*var(--gutter))] px-(--gutter) pt-10 pb-24 *:min-w-0 min-[1100px]:mx-0 min-[1100px]:max-w-none min-[1100px]:pr-(--gutter) min-[1100px]:pl-[calc(var(--edge)+280px)] min-[1100px]:*:max-w-(--col)">
+    <header>
+      <p class="text-main-500">Skills</p>
+      <h1 id="title" aria-label={heading} class="group mt-2.5 min-h-9 text-[32px]/9 font-normal tracking-[-0.01em]">
+        <span id="typed" aria-hidden="true">{heading}</span><span class="ml-0.5 inline-block h-[30px] w-px bg-main align-[-5px] group-data-done:animate-blink motion-reduce:animate-none" aria-hidden="true"></span>
+      </h1>
+      <p class="mt-[18px] max-w-[60ch] text-pretty text-main-500 [&_b]:font-normal [&_b]:text-main">A skill for coding agents. <b>fragment-draw</b> makes the three kinds of picture <Wm /> draws by hand: a schema map where the money travels, an SVG flipbook on a plate, and a field of numbers. It learned them from every piece on seven pages of fragment.dev, and draws each to the same ten rules, as one HTML file.</p>
+    </header>
+
+    <Section id="install" title="Install">
+      <Pill shell command="cp -r skills/fragment-draw ~/.claude/skills/" />
+      <Prose>The skill is one folder of small text files: the instructions, the rules, a kernel it draws on and three scripts. Copy it into your agent's skills folder (<code>~/.claude/skills</code> for Claude Code, <code>.cursor/skills</code> or <code>.agents/skills</code> for others). There is nothing to install; Node is only needed to run the checks.</Prose>
+    </Section>
+
+    <Section id="use" title="How to use it">
+      <Pill command="/fragment-draw <idea>" />
+      <ul class="grid max-w-[64ch] gap-1.5 [&_code]:bg-main-200 [&_code]:px-[0.4ch] [&_code]:text-main [&>li]:grid [&>li]:grid-cols-[2ch_minmax(0,1fr)] [&>li]:text-pretty [&>li]:before:text-main-500 [&>li]:before:content-['·']">
+        <li><span>Type the command with an idea. Name the kind (<code>diagram</code>, <code>illustration</code>, <code>field</code>) or let it choose: money between parties is a diagram, a mechanism or a moment is an illustration, a mood is a field.</span></li>
+        <li><span>Out comes <code>fragment-&lt;name&gt;.html</code>: one file with no dependencies that opens from disk, holding the piece on its plate, a play button, a scrubber and a theme switch.</span></li>
+        <li><span>For fragment.dev, <code>export.mjs</code> writes what the site's components take: an illustration's frames as <code>&lt;name&gt;-a-diagram.svg</code> and on, with their holds; a diagram as JSON; a field as a module.</span></li>
+        <li><span>It runs on any agent that reads skills: Claude Code, Cursor, Codex and others.</span></li>
+      </ul>
+    </Section>
+
+    <Section id="how" title="How it works">
+      <Rows rows={how} />
+    </Section>
+
+    <Section id="draws" title="What it draws">
+      <Prose>Three ideas, one of each kind. Each page opens from disk with no dependencies. Press play, or scrub.</Prose>
+      <Example
+        label="A marketplace payout"
+        prompt="/fragment-draw diagram a marketplace payout"
+        name="marketplace"
+        kind="diagram · 3 steps"
+        caption="A buyer's card payment lands in Acme Market's ledger, which pays the seller their share and sends the sales tax on."
+        page="fragment-marketplace"
+      />
+      <Example
+        label="How a refund reverses an entry"
+        prompt="/fragment-draw illustration how a refund reverses an entry"
+        name="refund"
+        kind="illustration · 10 frames"
+        caption="A refund is posted as a second entry with the opposite amount, and every account the order touched returns to zero."
+        page="fragment-refund"
+      />
+      <Example
+        label="Net to zero"
+        prompt="/fragment-draw field net to zero"
+        name="netzero"
+        kind="field · 10 s lap"
+        caption="Green assets and red liabilities drift together through grey numbers and cancel into zeros where they meet, then part."
+        page="fragment-netzero"
+      />
+    </Section>
+
+    <Section id="kinds" title="Three kinds">
+      <Prose>Everything <Wm /> draws is one of three things, and each has its own engine in the skill's kernel. The piece the agent writes is only the part that differs.</Prose>
+      <div class="grid gap-0.5 min-[600px]:grid-cols-3">
+        <div class="grid content-start gap-1.5 bg-negative px-[1.5ch] pt-3.5 pb-4">
+          <p class="flex items-center gap-[1ch]"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="0.6" y="0.6" width="10.8" height="10.8" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>diagram</p>
+          <p class="text-pretty text-main-500">A live schema map. Square boxes, the ledger's accounts listed inside, orthogonal lines, and a <code>$</code> that rides them a step at a time.</p>
+          <p class="mt-1.5 text-[12px]/4 text-main-500">The heroes of / and /product/*</p>
+        </div>
+        <div class="grid content-start gap-1.5 bg-negative px-[1.5ch] pt-3.5 pb-4">
+          <p class="flex items-center gap-[1ch]"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="0.6" y="2.6" width="8.8" height="8.8" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M3 0.6H11.4V9" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>illustration</p>
+          <p class="text-pretty text-main-500">An SVG flipbook on a white plate. Boxes, chevrons, windows, ruled rows, typed text: whole frames swapped, nothing tweened.</p>
+          <p class="mt-1.5 text-[12px]/4 text-main-500">Every post on /blog and guide under /docs</p>
+        </div>
+        <div class="grid content-start gap-1.5 bg-negative px-[1.5ch] pt-3.5 pb-4">
+          <p class="flex items-center gap-[1ch]"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect width="5" height="5" fill="rgb(var(--colour-asset-green))"/><rect x="7" y="7" width="5" height="5" fill="rgb(var(--colour-liability-red))"/><rect x="7" width="5" height="5" fill="rgb(var(--colour-main-300))"/><rect y="7" width="5" height="5" fill="rgb(var(--colour-main-300))"/></svg>field</p>
+          <p class="text-pretty text-main-500">A canvas shader. A grid of two-digit numbers in a seamless lap: grey for the world, coloured where the ledger is.</p>
+          <p class="mt-1.5 text-[12px]/4 text-main-500">The five pieces on /v2</p>
+        </div>
+      </div>
+    </Section>
+
+    <Section id="rules" title="The ten rules">
+      <Prose>Read off the finished pieces: the site's tokens, the schema maps' markup, 698 frames of flipbooks and the field engine. A piece that breaks one is not finished. The whole of each is in <Link href={skill("style.md")}>style.md</Link>.</Prose>
+      <Rows rows={rules} wide />
+    </Section>
+
+    <Section id="learned" title="What it learned from">
+      <Prose>Every diagram, illustration and field on fragment.dev's home, <Link href="https://fragment.dev/v2">/v2</Link>, blog, three product pages and docs, catalogued in <Link href={skill("catalogue.md")}>catalogue.md</Link> with what each one teaches. Nineteen frames travel with the skill as <Link href={skill("references.md")}>references</Link>: the picture, every frame in a strip, and the geometry with its real sizes, weights and tokens. Three are rebuilt in the skill's own format, as the examples it reads before it writes.</Prose>
+      <div class="grid grid-cols-2 gap-0.5 min-[600px]:grid-cols-4">
+        {[["7", "pages read"], ["56", "flipbooks"], ["698", "frames"], ["5", "fields on /v2"]].map(([n, d]) => (
+          <div class="bg-negative px-[1.5ch] pt-3 pb-3.5">
+            <p class="text-[20px]/[27px]">{n}</p>
+            <p class="text-main-500">{d}</p>
+          </div>
+        ))}
+      </div>
+      <Example
+        label="Copay, rebuilt"
+        name="copay"
+        kind="diagram · rebuilt from /"
+        caption="A patient's copay and an insurer's reimbursement meet in Acme Health's ledger, then pay the clinic and the pharmacy."
+        page="fragment-copay"
+      />
+      <Example
+        label="Clearing, rebuilt"
+        name="clearing"
+        kind="illustration · rebuilt from /blog"
+        caption="An invoice's open balance blinks, clears to zero, is ticked, and fills again: a clearing account netting out."
+        page="fragment-clearing"
+      />
+      <Example
+        label="Carry, rebuilt"
+        name="carry"
+        kind="field · after /v2"
+        caption="A cluster of accounted numbers grows out of grey noise, its moving edge filled green, then gives the grid back in red."
+        page="fragment-carry"
+      />
+    </Section>
+
+    <Section id="files" title="The files">
+      <ul class="grid gap-0.5">
+        {files.map((f) => (
+          <li class="grid grid-cols-[20ch_minmax(0,1fr)] gap-[1ch] bg-negative px-[1.5ch] py-[7px] max-[520px]:grid-cols-[minmax(0,1fr)] max-[520px]:gap-0">
+            {f.file ? <Link href={skill(f.file)}>{f.name}</Link> : <span>{f.name}</span>}
+            <span class="text-pretty text-main-500">{f.d}</span>
+          </li>
+        ))}
+      </ul>
+    </Section>
+
+    <p class="mt-16 border-t border-main-300 pt-[18px] text-pretty text-main-500 [&_a]:text-main">Made for <Wm />, from the work on fragment.dev. The page and the skill's structure follow <Link href="https://hairline.lucasmarkes.com/skills">hairline's skills page</Link>.</p>
+  </main>
+
+  <footer class="bg-negative">
+    <div class="mx-auto flex max-w-[1080px] flex-wrap justify-between gap-[18px] px-(--gutter) pt-8 pb-10 text-main-500 [&_a]:text-main">
+      <p><Wm /> Draw v0.1</p>
+      <p><a href="https://fragment.dev">fragment.dev</a></p>
+    </div>
+  </footer>
+</Base>

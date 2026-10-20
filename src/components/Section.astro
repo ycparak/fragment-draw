@@ -1,0 +1,20 @@
+---
+interface Props { id: string; title: string }
+const { id, title } = Astro.props;
+---
+<section
+  id={id}
+  aria-labelledby={`${id}-h`}
+  class="grid scroll-mt-[calc(var(--topbar)+44px)] gap-3.5 pt-16 *:min-w-0 min-[1100px]:scroll-mt-(--topbar)"
+>
+  <div class="group flex items-baseline gap-[1ch]">
+    <h2 id={`${id}-h`} class="text-[20px]/[27px] font-normal">{title}</h2>
+    <button
+      type="button"
+      data-anchor={id}
+      aria-label={`Copy link to ${title}`}
+      class="text-main-500 opacity-0 transition-[opacity,color] duration-150 group-hover:opacity-100 hover:text-main focus-visible:opacity-100 data-copied:opacity-100 [@media(hover:none)]:opacity-100"
+    >#</button>
+  </div>
+  <slot />
+</section>

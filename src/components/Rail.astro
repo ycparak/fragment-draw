@@ -1,0 +1,26 @@
+---
+import { groups } from "../data/page";
+
+const letter = (i: number) => String.fromCharCode(65 + i);
+---
+<!-- The page's sections as a rail, from 1100px; the styles are in styles/rail.css. -->
+<aside class="rail">
+  <nav aria-label="On this page">
+    {groups.map((g) => (
+      <div class="rail-group" style={`--gc: rgb(var(--colour-${g.colour}))`}>
+        <p class="rail-title"><span class="num">{g.num}</span>
+          {g.mark === "squares" ? (
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect width="6" height="6" fill="rgb(var(--colour-asset-green))"/><rect x="6" width="6" height="6" fill="rgb(var(--colour-income-blue))"/><rect y="6" width="6" height="6" fill="rgb(var(--colour-liability-red))"/><rect x="6" y="6" width="6" height="6" fill="rgb(var(--colour-expense-yellow))"/></svg>
+          ) : (
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 6V0A6 6 0 0 1 12 6Z" fill="rgb(var(--colour-income-blue))"/><path d="M6 6H12A6 6 0 0 1 6 12Z" fill="rgb(var(--colour-expense-yellow))"/><path d="M6 6V12A6 6 0 0 1 0 6Z" fill="rgb(var(--colour-liability-red))"/><path d="M6 6H0A6 6 0 0 1 6 0Z" fill="rgb(var(--colour-asset-green))"/></svg>
+          )}
+          {g.title}</p>
+        <ul>
+          {g.links.map((l, i) => (
+            <li><a class="rail-link" href={`#${l.id}`}><span class="k">{letter(i)}</span><span>{l.label}</span></a></li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </nav>
+</aside>

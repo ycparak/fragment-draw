@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@font-face { font-family: FragmentMono; src: url("../assets/fonts/FragmentMono-Regular.woff2") format("woff2"); font-style: normal; font-display: swap; }
+@font-face { font-family: FragmentMono; src: url("../assets/fonts/FragmentMono-Italic.woff2") format("woff2"); font-style: italic; font-display: swap; }
+
+/* Fragment's tokens, as fragment.dev defines them; .dark is the site's dark mode.
+   The colours are bare channels so a frame's own page can read them too. */
+:root {
+  --colour-negative: 255 255 255; --colour-canvas: 244 244 244;
+  --colour-main-100: 240 240 240; --colour-main-200: 230 230 230; --colour-main-300: 206 206 206;
+  --colour-main-500: 155 155 155; --colour-main-800: 45 45 45; --colour-main: 13 13 13; --colour-shadow: 10 10 10;
+  --colour-asset-green: 90 201 59; --colour-liability-red: 236 52 37; --colour-income-blue: 83 190 249;
+  --colour-expense-yellow: 255 224 0; --colour-orange: 255 144 0; --colour-always-black: 12 12 12;
+  --topbar: 48px; --gutter: 16px; --col: 640px;
+  /* where the page's content starts: the gutter, or the left edge of a 1080px frame centred on the window */
+  --edge: max(var(--gutter), calc((100% - 1080px) / 2 + var(--gutter)));
+  color-scheme: light;
+}
+:root.dark {
+  --colour-negative: 13 13 13; --colour-canvas: 28 28 28;
+  --colour-main-100: 23 23 23; --colour-main-200: 38 38 38; --colour-main-300: 54 54 54;
+  --colour-main-500: 80 80 80; --colour-main-800: 215 215 215; --colour-main: 255 255 255; --colour-shadow: 0 0 0;
+  --colour-orange: 255 163 0;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-*: initial;
+  --color-negative: rgb(var(--colour-negative));
+  --color-canvas: rgb(var(--colour-canvas));
+  --color-main-100: rgb(var(--colour-main-100));
+  --color-main-200: rgb(var(--colour-main-200));
+  --color-main-300: rgb(var(--colour-main-300));
+  --color-main-500: rgb(var(--colour-main-500));
+  --color-main-800: rgb(var(--colour-main-800));
+  --color-main: rgb(var(--colour-main));
+  --color-asset-green: rgb(var(--colour-asset-green));
+  --color-liability-red: rgb(var(--colour-liability-red));
+  --color-income-blue: rgb(var(--colour-income-blue));
+  --color-expense-yellow: rgb(var(--colour-expense-yellow));
+  --color-orange: rgb(var(--colour-orange));
+  --font-mono: FragmentMono, ui-monospace, "SF Mono", Menlo, monospace;
+  --default-transition-timing-function: ease;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@theme {
+  --animate-blink: blink 1060ms steps(1) infinite;
+  @keyframes blink { 50% { opacity: 0; } }
+}
+
+@layer base {
+  html { background: rgb(var(--colour-canvas)); scroll-padding-top: calc(var(--topbar) + 44px); }
+  @media (min-width: 1100px) { html { scroll-padding-top: var(--topbar); } }
+  @media (prefers-reduced-motion: no-preference) { html[data-smooth] { scroll-behavior: smooth; } }
+  body {
+    font-feature-settings: "ss01" on; font-variant-ligatures: no-contextual;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { cursor: pointer; }
+  :is(a, button, iframe):focus-visible { outline: 1px solid rgb(var(--colour-main)); outline-offset: 2px; }
+}
+
+@import "./rail.css";

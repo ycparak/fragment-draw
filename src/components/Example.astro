@@ -1,0 +1,31 @@
+---
+import Pill from "./Pill.astro";
+import { withBase } from "../lib/url";
+
+interface Props {
+  label: string;
+  name: string;
+  kind: string;
+  caption: string;
+  /** a built page under public/made */
+  page: string;
+  /** the command that asked for it, when it is a command to copy */
+  prompt?: string;
+}
+const { label, name, kind, caption, page, prompt } = Astro.props;
+---
+<!-- An example: the prompt that asked for it, what it drew, then the page the skill wrote, in a frame under a rule. -->
+<article class="mt-0.5 grid bg-negative" aria-label={label}>
+  {prompt && <Pill command={prompt} class="border-b border-main-200" />}
+  <div class="grid gap-0.5 px-[1.5ch] pt-3 pb-3.5">
+    <p class="flex justify-between gap-[1ch]"><span>{name}</span><span class="text-main-500">{kind}</span></p>
+    <p class="text-pretty text-main-500">{caption}</p>
+  </div>
+  <iframe
+    data-frame
+    data-src={withBase(`made/${page}.html`)}
+    title={caption}
+    loading="lazy"
+    class="block h-[520px] w-full border-t border-main-200 bg-canvas"
+  ></iframe>
+</article>

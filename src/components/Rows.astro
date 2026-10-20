@@ -1,0 +1,16 @@
+---
+import type { Row } from "../data/page";
+
+interface Props { rows: Row[]; wide?: boolean }
+const { rows, wide = false } = Astro.props;
+---
+<!-- Lettered rows on hairline rules, as the site's feature list and the docs' guides are set. -->
+<ol class="border-t border-main-300 [&_code]:bg-main-200 [&_code]:px-[0.4ch] [&_code]:text-main">
+  {rows.map((r) => (
+    <li class:list={["grid gap-x-[1ch] border-b border-main-300 py-[7px] text-pretty", wide ? "grid-cols-[9ch_minmax(0,1fr)]" : "grid-cols-[3ch_minmax(0,1fr)]"]}>
+      <span class="text-main-500">{r.k}</span>
+      <span><b class="font-normal">{r.b}</b>{r.rest && <Fragment> &nbsp;{r.rest}</Fragment>}</span>
+      <span class="col-start-2 text-main-500" set:html={r.d} />
+    </li>
+  ))}
+</ol>
